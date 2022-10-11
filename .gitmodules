@@ -1,0 +1,3 @@
+[submodule "IHS"]
+	path = IHS
+	url = https://github.com/VigilantBag/IHS
