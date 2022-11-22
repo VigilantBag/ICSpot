@@ -42,8 +42,9 @@ has to be on the same network as the host interface where honeyd will listen.
 1. From inside the repository, run: 
 
     `sudo honeyd -d -p nmap-os-db -i INTERFACE -l honeyd.log -f honeyd.conf IP –disable-webserver`
-
+    `sudo honeyd -d -p nmap-os-db -i <interface> -l <log_name.log> -f <filename.conf> <IP_address_or_subnet> -u 0 -g 0 --disable-webserver`
     where IP is the same IP address of Honeyd configuration file and INTERFACE is the interface of the host machine
+    Example : sudo honeyd -d -p nmap-os-db -i eth0 -l /root/ICSpot/Logging/honeyed.log -s /root/ICSpot/Logging/servicelog.log -f honeyd.conf 167.172.36.51/20 -u 0 -g 0 --disable-webserver
 
 1. ICSpot is now up and running!
 

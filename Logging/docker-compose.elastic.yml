@@ -1,0 +1,50 @@
+version: "3"
+services:
+  elasticsearch:
+    image: blacktop/elasticsearch:x-pack-7.7.1
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+    networks:
+      - elastinet
+
+  kibana:
+    depends_on:
+      - elasticsearch
+    image: blacktop/kibana:x-pack-7.7.1
+    environment:
+      - xpack.reporting.enabled=false
+    ports:
+      - "5601:5601"
+    links:
+      - elasticsearch
+    networks:
+      - elastinet
+
+  filebeat:
+    depends_on:
+      - kibana
+    image: blacktop/filebeat:7.7.1
+    links:
+      - kibana
+      - elasticsearch
+    volumes:
+      - ./pcap:/pcap
+    command: -e
+    networks:
+      - elastinet
+
+  zeek:
+    depends_on:
+      - filebeat
+    build: ./elastic
+    image: blacktop/zeek:elastic
+    volumes:
+      - ./pcap:/pcap
+    networks:
+      - elastinet
+    command: -F -r smallFlows.pcap local file-extraction/plugins/extract-all-files.zeek "Site::local_nets += { 192.168.5.0/24, 10.0.2.0/24 }"
+
+networks:
+  elastinet:
